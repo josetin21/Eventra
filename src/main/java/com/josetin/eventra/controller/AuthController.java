@@ -1,6 +1,8 @@
 package com.josetin.eventra.controller;
 
+import com.josetin.eventra.dto.request.LoginRequest;
 import com.josetin.eventra.dto.request.RegisterRequest;
+import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,11 @@ public class AuthController {
         authService.register(request);
 
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
+        return ResponseEntity.ok(authService.login(request));
     }
 
 }
