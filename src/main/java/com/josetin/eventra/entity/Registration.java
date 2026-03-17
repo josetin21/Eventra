@@ -1,7 +1,7 @@
 package com.josetin.eventra.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(columnNames = {"user_id", "event_id"})
         }
 )
-@Data
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Registration {
 
     @Id
