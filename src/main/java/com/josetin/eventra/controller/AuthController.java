@@ -4,6 +4,7 @@ import com.josetin.eventra.dto.request.LoginRequest;
 import com.josetin.eventra.dto.request.RegisterRequest;
 import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
         authService.register(request);
 
         return ResponseEntity.ok("User registered successfully");
