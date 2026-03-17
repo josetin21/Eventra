@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "events")
 @Data
 public class Event {
 
@@ -18,15 +19,22 @@ public class Event {
 
     private String description;
 
-    private LocalDateTime date;
+    private LocalDateTime eventDate;
 
     private String venue;
 
-    private Integer maxParticipants;
+    private Integer capacity;
 
     private LocalDateTime registrationDeadline;
 
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id")
+    private User organizer;
+
+    @Enumerated(EnumType.STRING)
+    private EventStatus status;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Registration> registrations;

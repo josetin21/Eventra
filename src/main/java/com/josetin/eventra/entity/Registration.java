@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
+        name = "registrations",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"user_id", "event_id"})
         }
@@ -25,6 +26,8 @@ public class Registration {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
+
+    private String qrCode;
 
     private LocalDateTime registeredAt;
 }
