@@ -1,15 +1,13 @@
 package com.josetin.eventra.service;
 
 import com.josetin.eventra.dto.request.LoginRequest;
-import com.josetin.eventra.dto.request.RegisterRequest;
+import com.josetin.eventra.dto.request.RegistrationRequest;
 import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.entity.Role;
 import com.josetin.eventra.entity.User;
 import com.josetin.eventra.repository.UserRepository;
 import com.josetin.eventra.security.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public void register(RegisterRequest request){
+    public void register(RegistrationRequest request){
         if (userRepository.findByEmail(request.email()).isPresent()){
             throw new RuntimeException("Email already registered");
         }

@@ -1,0 +1,95 @@
+package com.josetin.eventra.service;
+
+import com.josetin.eventra.dto.response.RegistrationResponse;
+import com.josetin.eventra.entity.Event;
+import com.josetin.eventra.entity.EventStatus;
+import com.josetin.eventra.entity.Registration;
+import com.josetin.eventra.entity.User;
+import com.josetin.eventra.exception.BusinessException;
+import com.josetin.eventra.mapper.RegistrationMapper;
+import com.josetin.eventra.repository.EventRepository;
+import com.josetin.eventra.repository.RegistrationRepository;
+import com.josetin.eventra.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class RegistrationService {
+
+    private final RegistrationRepository registrationRepository;
+    private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final QRCodeService qrCodeService;
+    private final RegistrationMapper registrationMapper;
+
+    private User getCurrentUser(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(()-> new BusinessException("User not found", HttpStatus.NOT_FOUND));
+    }
+
+    public RegistrationResponse register(Long eventId){
+        User student = getCurrentUser();
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
+
+        if (event.getStatus() != EventStatus.ACTIVE){
+            throw new BusinessException("Event is not available for registration", HttpStatus.BAD_REQUEST);
+        }
+
+        if (LocalDateTime.now().isAfter(event.getRegistrationDeadline())){
+            throw new BusinessException("Registration deadline has passed", HttpStatus.BAD_REQUEST);
+        }
+
+        int currentCount = registrationRepository.countByEventId(eventId);
+        if (currentCount >= event.getCapacity()){
+            throw new BusinessException("Event is full", HttpStatus.BAD_REQUEST);
+        }
+
+        if (registrationRepository.existsByUserIdAndEventId(student.getId(), eventId)){
+            throw new BusinessException("You are already registered for this event", HttpStatus.CONFLICT);
+        }
+
+        String qrContent = "EVENTRA-" + UUID.randomUUID();
+        String qrCodeBase64 = qrCodeService.generateQRCodeBase64(qrContent);
+
+        Registration registration = Registration.builder()
+                .user(student)
+                .event(event)
+                .qrCode(qrCodeBase64)
+                .registeredAt(LocalDateTime.now())
+                .build();
+
+        Registration saved = registrationRepository.save(registration);
+        return registrationMapper.toResponse(saved);
+    }
+
+    public List<RegistrationResponse> getMyRegistration(){
+        User student = getCurrentUser();
+        return registrationRepository.findByUserId(student.getId())
+                .stream()
+                .map(registrationMapper::toResponse)
+                .toList();
+    }
+
+    public void cancelRegistration(Long registrationId){
+        User student = getCurrentUser();
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(()-> new BusinessException("Registration not found",HttpStatus.NOT_FOUND));
+
+        if (!registration.getUser().getId().equals(student.getId())){
+            throw new BusinessException("you are not authorized to cancel this registration", HttpStatus.FORBIDDEN);
+        }
+
+        registrationRepository.delete(registration);
+    }
+}
+

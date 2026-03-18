@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-public record RegisterRequest(
+public record RegistrationRequest(
 
         @NotBlank(message = "Name is required")
         String name,

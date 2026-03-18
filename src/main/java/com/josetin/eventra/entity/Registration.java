@@ -31,6 +31,7 @@ public class Registration {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @Column(columnDefinition = "TEXT")
     private String qrCode;
 
     private LocalDateTime registeredAt;

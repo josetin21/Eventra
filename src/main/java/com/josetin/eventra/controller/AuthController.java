@@ -1,7 +1,7 @@
 package com.josetin.eventra.controller;
 
 import com.josetin.eventra.dto.request.LoginRequest;
-import com.josetin.eventra.dto.request.RegisterRequest;
+import com.josetin.eventra.dto.request.RegistrationRequest;
 import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<String> register(@Valid @RequestBody RegistrationRequest request){
         authService.register(request);
 
         return ResponseEntity.ok("User registered successfully");

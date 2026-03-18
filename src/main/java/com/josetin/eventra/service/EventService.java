@@ -5,10 +5,12 @@ import com.josetin.eventra.dto.response.EventResponse;
 import com.josetin.eventra.entity.Event;
 import com.josetin.eventra.entity.EventStatus;
 import com.josetin.eventra.entity.User;
+import com.josetin.eventra.exception.BusinessException;
 import com.josetin.eventra.mapper.EventMapper;
 import com.josetin.eventra.repository.EventRepository;
 import com.josetin.eventra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class EventService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return userRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("User not found"));
+                .orElseThrow(()-> new BusinessException("User not found", HttpStatus.NOT_FOUND));
     }
 
     public EventResponse createEvent(EventRequest request){
@@ -58,17 +60,17 @@ public class EventService {
 
     public EventResponse getEventById(Long id){
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Event not found"));
+                .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
         return eventMapper.toResponse(event);
     }
 
     public EventResponse updateEvent(Long id, EventRequest request){
         User currentUser = getCurrentUser();
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Event not found"));
+                .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
         if(!event.getOrganizer().getId().equals(currentUser.getId())){
-            throw new RuntimeException("You are not authorized to edit this event");
+            throw new BusinessException("You are not authorized to edit this event",HttpStatus.FORBIDDEN);
         }
 
         event.setTitle(request.title());
@@ -86,10 +88,10 @@ public class EventService {
     public void cancelEvent(Long id){
         User currentUser = getCurrentUser();
         Event event = eventRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Event not found"));
+                .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
         if (!event.getOrganizer().getId().equals(currentUser.getId())){
-            throw new RuntimeException("You are not authorized to edit this event");
+            throw new BusinessException("You are not authorized to edit this event", HttpStatus.FORBIDDEN);
         }
 
         event.setStatus(EventStatus.CANCELLED);
