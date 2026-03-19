@@ -39,5 +39,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Registration> registrations;
+
+    @Enumerated(EnumType.STRING)
+    private Designation designation;
 }
 

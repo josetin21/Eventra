@@ -1,7 +1,8 @@
 package com.josetin.eventra.controller;
 
+import com.josetin.eventra.dto.request.AdminRegisterRequest;
 import com.josetin.eventra.dto.request.LoginRequest;
-import com.josetin.eventra.dto.request.RegistrationRequest;
+import com.josetin.eventra.dto.request.RegisterRequest;
 import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegistrationRequest request){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
         authService.register(request);
 
         return ResponseEntity.ok("User registered successfully");
@@ -29,6 +30,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody AdminRegisterRequest request){
+        authService.registerAdmin(request);
+        return ResponseEntity.ok("Admin registered successfully");
     }
 
 }

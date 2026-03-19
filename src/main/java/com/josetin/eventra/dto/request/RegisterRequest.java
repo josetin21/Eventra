@@ -1,11 +1,9 @@
 package com.josetin.eventra.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import com.josetin.eventra.entity.Designation;
+import jakarta.validation.constraints.*;
 
-public record RegistrationRequest(
+public record RegisterRequest(
 
         @NotBlank(message = "Name is required")
         String name,
@@ -22,6 +20,9 @@ public record RegistrationRequest(
 
         @Min(value = 1, message = "Year must be between 1 and 4")
         @Max(value = 4, message = "Year must be between 1 and 4")
-        Integer year
+        Integer year,
+
+        @NotNull(message = "Designation is required")
+        Designation designation
 ) {
 }
