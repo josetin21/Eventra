@@ -1,9 +1,19 @@
 package com.josetin.eventra.repository;
 
 import com.josetin.eventra.entity.Event;
+import com.josetin.eventra.entity.EventStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+    Long countByStatus(EventStatus status);
+
+    Long countByOrganizerId(Long organizerId);
+
+    Long countByOrganizerIdAndStatus(Long organizerId, EventStatus status);
+
+    List<Event> findByOrganizerId(Long organizerId);
 }

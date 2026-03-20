@@ -14,4 +14,6 @@ public interface OrganizerRequestRepository extends JpaRepository<OrganizerReque
     Optional<OrganizerRequest> findTopByUserIdOrderByRequestedAtDesc(Long userId);
 
     boolean existsByUserIdAndStatus(Long userId, RequestStatus status);
+
+    Long countByStatus(RequestStatus status);
 }
