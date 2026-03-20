@@ -20,4 +20,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     List<Registration> findByUserId(Long userId);
 
     List<Registration> findByEventId(Long eventId);
+
+    boolean existsByUserIdAndEventIdAndQrCode(Long id, Long id1, String qrCode);
 }
