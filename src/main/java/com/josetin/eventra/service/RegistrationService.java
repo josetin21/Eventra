@@ -12,6 +12,7 @@ import com.josetin.eventra.repository.RegistrationRepository;
 import com.josetin.eventra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final QRCodeService qrCodeService;
     private final RegistrationMapper registrationMapper;
+    private final EmailService emailService;
+    private final JavaMailSender javaMailSender;
 
     private User getCurrentUser(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -71,6 +74,15 @@ public class RegistrationService {
                 .build();
 
         Registration saved = registrationRepository.save(registration);
+
+        emailService.sendRegistrationConfirmation(
+                student.getEmail(),
+                student.getName(),
+                event.getTitle(),
+                event.getVenue(),
+                event.getEventDate().format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"))
+        );
+
         return registrationMapper.toResponse(saved);
     }
 
