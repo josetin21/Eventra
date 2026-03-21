@@ -40,6 +40,7 @@ public class AuthService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.STUDENT)
+                .designation(request.designation())
                 .department(request.department())
                 .year(request.year())
                 .createdAt(LocalDateTime.now())
