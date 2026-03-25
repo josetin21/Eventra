@@ -1,7 +1,6 @@
 package com.josetin.eventra.controller;
 
 import com.josetin.eventra.dto.response.DashboardResponse;
-import com.josetin.eventra.dto.response.OrganizerDashboardResponse;
 import com.josetin.eventra.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +22,4 @@ public class DashboardController {
         return ResponseEntity.ok(dashboardService.getDashboard());
     }
 
-    @GetMapping("/organizer")
-    @PreAuthorize("hasRole('ORGANIZER')")
-    public ResponseEntity<OrganizerDashboardResponse> getOrganizerDashboard(){
-        return ResponseEntity.ok(dashboardService.getOrganizerDashboard());
-    }
 }

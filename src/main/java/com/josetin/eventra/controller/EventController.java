@@ -32,7 +32,7 @@ public class EventController {
 
     @GetMapping("/my")
     public ResponseEntity<List<EventResponse>> getMyEvents(){
-        return new ResponseEntity.ok(eventService.getMyEvents());
+        return ResponseEntity.ok(eventService.getMyEvents());
     }
 
     @PutMapping("/{id}/approve")

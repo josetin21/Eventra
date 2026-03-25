@@ -5,7 +5,7 @@ public record DashboardResponse(
         Long totalEvents,
         Long totalRegistration,
         Long totalAttendance,
-        Long pendingOrganizerRequests,
+        Long pendingEventApprovals,
         Long activeEvents,
         Long cancelledEvents
 ) {
