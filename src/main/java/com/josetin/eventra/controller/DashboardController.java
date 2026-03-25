@@ -21,5 +21,4 @@ public class DashboardController {
     public ResponseEntity<DashboardResponse> getDashboard(){
         return ResponseEntity.ok(dashboardService.getDashboard());
     }
-
 }
