@@ -33,6 +33,14 @@ public class Event {
 
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "TEXT")
+    private String idCardUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String permissionLetterUrl;
+
+    private String rejectionReason;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private User organizer;

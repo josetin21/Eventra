@@ -3,5 +3,6 @@ package com.josetin.eventra.entity;
 public enum EventStatus {
     ACTIVE,
     CANCELLED,
-    COMPLETED
+    COMPLETED,
+    PENDING_APPROVAL
 }

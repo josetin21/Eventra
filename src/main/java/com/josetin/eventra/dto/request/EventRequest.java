@@ -28,6 +28,10 @@ public record EventRequest(
 
         @NotNull(message = "Registration deadline is required")
         @Future(message = "Registration deadline must be in the future")
-        LocalDateTime registrationDeadline
+        LocalDateTime registrationDeadline,
+
+        String idCardUrl,
+
+        String permissionLetterUrl
 ) {
 }

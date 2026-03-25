@@ -21,7 +21,10 @@ public class EventMapper {
                 event.getRegistrationDeadline(),
                 event.getOrganizer().getName(),
                 event.getStatus(),
-                event.getCreatedAt()
+                event.getCreatedAt(),
+                event.getIdCardUrl(),
+                event.getPermissionLetterUrl(),
+                event.getRejectionReason()
         );
     }
 }

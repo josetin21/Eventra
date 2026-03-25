@@ -27,6 +27,10 @@ public class EventService {
     private final UserRepository userRepository;
     private final EventMapper eventMapper;
 
+    private boolean isBlank(String s){
+        return s == null || s.trim().isEmpty();
+    }
+
     private User getCurrentUser(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -35,6 +39,10 @@ public class EventService {
     }
 
     public EventResponse createEvent(EventRequest request){
+        if (isBlank(request.idCardUrl()) && isBlank(request.permissionLetterUrl())){
+            throw new BusinessException("At least one verification document is required", HttpStatus.NOT_FOUND);
+        }
+
         User organizer = getCurrentUser();
 
         Event event = Event.builder()
@@ -45,7 +53,7 @@ public class EventService {
                 .capacity(request.capacity())
                 .registrationDeadline(request.registrationDeadline())
                 .organizer(organizer)
-                .status(EventStatus.ACTIVE)
+                .status(EventStatus.PENDING_APPROVAL)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -54,10 +62,52 @@ public class EventService {
     }
 
     public List<EventResponse> getAllEvents(){
-        return eventRepository.findAll()
+        return eventRepository.findByStatus(EventStatus.ACTIVE)
                 .stream()
                 .map(eventMapper::toResponse)
                 .toList();
+    }
+
+    public List<EventResponse> getPendingEvents(){
+        return eventRepository.findByStatus(EventStatus.PENDING_APPROVAL)
+                .stream()
+                .map(eventMapper::toResponse)
+                .toList();
+    }
+
+    public List<EventResponse> getMyEvents(){
+        User currentUser = getCurrentUser();
+        return eventRepository.findByOrganizerId(currentUser.getId())
+                .stream()
+                .map(eventMapper::toResponse)
+                .toList();
+    }
+
+    public EventResponse approveEvent(Long id){
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
+
+        if (event.getStatus() != EventStatus.PENDING_APPROVAL){
+            throw new BusinessException("Event is not pending for approval", HttpStatus.BAD_REQUEST);
+        }
+
+        event.setStatus(EventStatus.ACTIVE);
+        Event saved = eventRepository.save(event);
+        return eventMapper.toResponse(saved);
+    }
+
+    public EventResponse rejectEvent(Long id, String reason){
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
+
+        if (event.getStatus() != EventStatus.PENDING_APPROVAL){
+            throw new BusinessException("Event is not pending for approval", HttpStatus.BAD_REQUEST);
+        }
+
+        event.setStatus(EventStatus.CANCELLED);
+        event.setRejectionReason(reason);
+        Event saved = eventRepository.save(event);
+        return eventMapper.toResponse(saved);
     }
 
     public EventResponse getEventById(Long id){

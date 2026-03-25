@@ -16,6 +16,9 @@ public record EventResponse(
         LocalDateTime registrationDeadline,
         String organizerName,
         EventStatus status,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String idCardUrl,
+        String permissionLetterUrl,
+        String rejectionReason
 ) {
 }
