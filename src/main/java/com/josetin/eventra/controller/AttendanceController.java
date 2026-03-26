@@ -21,7 +21,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
 
     @PostMapping("/sessions/events/{eventId}")
-    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AttendanceSessionResponse> openSession(
             @PathVariable Long eventId,
             @RequestParam(defaultValue = "30") int durationMinutes){
@@ -36,7 +36,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/events/{eventId}")
-    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<AttendanceResponse>> getEventAttendance(@PathVariable Long eventId){
         return ResponseEntity.ok(attendanceService.getEventAttendance(eventId));
     }
@@ -47,8 +47,8 @@ public class AttendanceController {
     }
 
     @GetMapping("/sessions/events/{eventId}")
-    @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
-    public ResponseEntity<List<AttendanceResponse>> getEventSession(@PathVariable Long eventId){
-        return ResponseEntity.ok(attendanceService.getEventAttendance(eventId));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<AttendanceSessionResponse>> getEventSession(@PathVariable Long eventId){
+        return ResponseEntity.ok(attendanceService.getEventSession(eventId));
     }
 }
