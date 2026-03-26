@@ -14,7 +14,6 @@ public record EventResponse(
         Integer capacity,
         Integer registeredCount,
         LocalDateTime registrationDeadline,
-        String organizerName,
         EventStatus status,
         LocalDateTime createdAt,
         String idCardUrl,

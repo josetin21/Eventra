@@ -23,5 +23,4 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
 
     boolean existsByUserIdAndEventIdAndQrCode(Long id, Long id1, String qrCode);
 
-    Long countByEventOrganizerId(Long organizerId);
 }

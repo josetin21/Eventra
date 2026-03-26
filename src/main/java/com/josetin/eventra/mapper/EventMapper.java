@@ -19,7 +19,6 @@ public class EventMapper {
                 event.getCapacity(),
                 registeredCount,
                 event.getRegistrationDeadline(),
-                event.getOrganizer().getName(),
                 event.getStatus(),
                 event.getCreatedAt(),
                 event.getIdCardUrl(),

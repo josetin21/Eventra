@@ -54,7 +54,6 @@ public class EventService {
                 .registrationDeadline(request.registrationDeadline())
                 .idCardUrl(request.idCardUrl())
                 .permissionLetterUrl(request.permissionLetterUrl())
-                .organizer(organizer)
                 .status(EventStatus.PENDING_APPROVAL)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -79,7 +78,7 @@ public class EventService {
 
     public List<EventResponse> getMyEvents(){
         User currentUser = getCurrentUser();
-        return eventRepository.findByOrganizerId(currentUser.getId())
+        return eventRepository.findByStatus(EventStatus.ACTIVE)
                 .stream()
                 .map(eventMapper::toResponse)
                 .toList();
@@ -123,9 +122,6 @@ public class EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
-        if(!event.getOrganizer().getId().equals(currentUser.getId())){
-            throw new BusinessException("You are not authorized to edit this event",HttpStatus.FORBIDDEN);
-        }
 
         event.setTitle(request.title());
         event.setDescription(request.description());
@@ -144,9 +140,6 @@ public class EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
-        if (!event.getOrganizer().getId().equals(currentUser.getId())){
-            throw new BusinessException("You are not authorized to edit this event", HttpStatus.FORBIDDEN);
-        }
 
         event.setStatus(EventStatus.CANCELLED);
         eventRepository.save(event);

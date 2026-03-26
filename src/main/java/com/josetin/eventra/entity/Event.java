@@ -41,10 +41,6 @@ public class Event {
 
     private String rejectionReason;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organizer_id")
-    private User organizer;
-
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 

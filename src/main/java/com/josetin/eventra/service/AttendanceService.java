@@ -40,9 +40,6 @@ public class AttendanceService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
-        if (!event.getOrganizer().getId().equals(organizer.getId())){
-            throw new BusinessException("You are not the organizer of this event", HttpStatus.FORBIDDEN);
-        }
 
         if (event.getStatus() != EventStatus.ACTIVE){
             throw new BusinessException("Event is not active", HttpStatus.BAD_REQUEST);
