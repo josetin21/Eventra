@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public record EventRequest(
 
-        @NotBlank(message = "Tittle is required")
+        @NotBlank(message = "Title is required")
         String title,
 
         @NotBlank(message = "Description is required")

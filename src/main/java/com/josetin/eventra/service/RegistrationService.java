@@ -32,7 +32,6 @@ public class RegistrationService {
     private final QRCodeService qrCodeService;
     private final RegistrationMapper registrationMapper;
     private final EmailService emailService;
-    private final JavaMailSender javaMailSender;
 
     private User getCurrentUser(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

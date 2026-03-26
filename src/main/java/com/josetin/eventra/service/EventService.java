@@ -52,6 +52,8 @@ public class EventService {
                 .venue(request.venue())
                 .capacity(request.capacity())
                 .registrationDeadline(request.registrationDeadline())
+                .idCardUrl(request.idCardUrl())
+                .permissionLetterUrl(request.permissionLetterUrl())
                 .organizer(organizer)
                 .status(EventStatus.PENDING_APPROVAL)
                 .createdAt(LocalDateTime.now())
