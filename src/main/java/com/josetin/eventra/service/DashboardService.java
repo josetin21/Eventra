@@ -34,8 +34,8 @@ public class DashboardService {
                 registrationRepository.count(),
                 attendanceRepository.count(),
                 eventRepository.countByStatus (EventStatus.PENDING_APPROVAL),
-                eventRepository.countByStatus (EventStatus.ACTIVE),
-                eventRepository.countByStatus(EventStatus.CANCELLED)
+                eventRepository.countByStatus (EventStatus.APPROVED),
+                eventRepository.countByStatus(EventStatus.REJECTED)
         );
     }
 

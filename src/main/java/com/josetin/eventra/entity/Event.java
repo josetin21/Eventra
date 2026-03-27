@@ -44,6 +44,10 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id")
+    private User organizer;
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Registration> registrations;
 }

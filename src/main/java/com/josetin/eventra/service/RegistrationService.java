@@ -45,7 +45,7 @@ public class RegistrationService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
-        if (event.getStatus() != EventStatus.ACTIVE){
+        if (event.getStatus() != EventStatus.APPROVED){
             throw new BusinessException("Event is not available for registration", HttpStatus.BAD_REQUEST);
         }
 

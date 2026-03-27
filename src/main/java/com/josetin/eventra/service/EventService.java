@@ -63,7 +63,7 @@ public class EventService {
     }
 
     public List<EventResponse> getAllEvents(){
-        return eventRepository.findByStatus(EventStatus.ACTIVE)
+        return eventRepository.findByStatus(EventStatus.APPROVED)
                 .stream()
                 .map(eventMapper::toResponse)
                 .toList();
@@ -78,7 +78,7 @@ public class EventService {
 
     public List<EventResponse> getMyEvents(){
         User currentUser = getCurrentUser();
-        return eventRepository.findByStatus(EventStatus.ACTIVE)
+        return eventRepository.findByOrganizerId(currentUser.getId())
                 .stream()
                 .map(eventMapper::toResponse)
                 .toList();
@@ -92,7 +92,7 @@ public class EventService {
             throw new BusinessException("Event is not pending for approval", HttpStatus.BAD_REQUEST);
         }
 
-        event.setStatus(EventStatus.ACTIVE);
+        event.setStatus(EventStatus.APPROVED);
         Event saved = eventRepository.save(event);
         return eventMapper.toResponse(saved);
     }
@@ -105,7 +105,7 @@ public class EventService {
             throw new BusinessException("Event is not pending for approval", HttpStatus.BAD_REQUEST);
         }
 
-        event.setStatus(EventStatus.CANCELLED);
+        event.setStatus(EventStatus.REJECTED);
         event.setRejectionReason(reason);
         Event saved = eventRepository.save(event);
         return eventMapper.toResponse(saved);

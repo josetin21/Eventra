@@ -41,7 +41,7 @@ public class AttendanceService {
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
 
-        if (event.getStatus() != EventStatus.ACTIVE){
+        if (event.getStatus() != EventStatus.APPROVED){
             throw new BusinessException("Event is not active", HttpStatus.BAD_REQUEST);
         }
 
