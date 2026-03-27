@@ -9,6 +9,7 @@ public class EventMapper {
 
     public EventResponse toResponse(Event event){
         int registeredCount = event.getRegistrations() == null ? 0 : event.getRegistrations() .size();
+        String organizerName = event.getOrganizer() != null ? event.getOrganizer().getName() : "Unknown";
 
         return new EventResponse(
                 event.getId(),
@@ -23,7 +24,8 @@ public class EventMapper {
                 event.getCreatedAt(),
                 event.getIdCardUrl(),
                 event.getPermissionLetterUrl(),
-                event.getRejectionReason()
+                event.getRejectionReason(),
+                organizerName
         );
     }
 }

@@ -18,6 +18,7 @@ public record EventResponse(
         LocalDateTime createdAt,
         String idCardUrl,
         String permissionLetterUrl,
-        String rejectionReason
+        String rejectionReason,
+        String organizerName
 ) {
 }

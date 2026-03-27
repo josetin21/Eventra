@@ -6,6 +6,7 @@ public record AttendanceResponse(
         Long id,
         String eventTitle,
         String attendeeName,
+        String attendeeEmail,
         String sessionToken,
         LocalDateTime markedAt
 ) {

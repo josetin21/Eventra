@@ -28,6 +28,7 @@ public class AttendanceMapper {
                 attendance.getId(),
                 attendance.getEvent().getTitle(),
                 attendance.getUser().getName(),
+                attendance.getUser().getEmail(),
                 attendance.getAttendanceSession().getToken(),
                 attendance.getMarkedAt()
         );
