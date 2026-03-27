@@ -30,13 +30,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception{
-
         http
                 .csrf(csrf-> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/auth/**", "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/events", "/events/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->session
@@ -44,7 +44,6 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
@@ -57,6 +56,10 @@ public class SecurityConfig {
         return provider;
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

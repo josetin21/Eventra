@@ -122,6 +122,13 @@ public class EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
+        if (!event.getOrganizer().getId().equals(currentUser.getId())){
+            throw new BusinessException("You are not authorized to update this event", HttpStatus.FORBIDDEN);
+        }
+
+        if (event.getStatus() == EventStatus.APPROVED){
+            throw new BusinessException("Cannot edit an approved event", HttpStatus.BAD_REQUEST);
+        }
 
         event.setTitle(request.title());
         event.setDescription(request.description());
@@ -129,7 +136,6 @@ public class EventService {
         event.setVenue(request.venue());
         event.setCapacity(request.capacity());
         event.setRegistrationDeadline(request.registrationDeadline());
-
 
         Event saved = eventRepository.save(event);
         return eventMapper.toResponse(saved);
@@ -140,6 +146,9 @@ public class EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
+        if (!event.getOrganizer().getId().equals(currentUser.getId())){
+            throw new BusinessException("You are not authorized to update this event", HttpStatus.FORBIDDEN);
+        }
 
         event.setStatus(EventStatus.CANCELLED);
         eventRepository.save(event);

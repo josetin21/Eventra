@@ -24,30 +24,6 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(request));
     }
 
-    @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<EventResponse>> getPendingEvents(){
-        return ResponseEntity.ok(eventService.getPendingEvents());
-    }
-
-    @GetMapping("/my")
-    public ResponseEntity<List<EventResponse>> getMyEvents(){
-        return ResponseEntity.ok(eventService.getMyEvents());
-    }
-
-    @PutMapping("/{id}/approve")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponse> approveEvent(@PathVariable Long id){
-        return ResponseEntity.ok(eventService.approveEvent(id));
-    }
-    @PutMapping("/{id}/reject")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EventResponse> rejectEvent(
-            @PathVariable Long id,
-            @RequestParam String reason){
-        return ResponseEntity.ok(eventService.rejectEvent(id, reason));
-    }
-
     @GetMapping
     public ResponseEntity<List<EventResponse>> getAllEvent(){
         return ResponseEntity.ok(eventService.getAllEvents());
@@ -56,6 +32,11 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEventById(@PathVariable Long id){
         return ResponseEntity.ok(eventService.getEventById(id));
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<EventResponse>> getMyEvents(){
+        return ResponseEntity.ok(eventService.getMyEvents());
     }
 
     @PutMapping("/{id}")
