@@ -92,7 +92,8 @@ public class AuthService {
         return new AuthResponse(
                 token,
                 user.getRole().name(),
-                user.getName()
+                user.getName(),
+                user.getDesignation() != null ? user.getDesignation().name() : null
         );
     }
 }
