@@ -34,5 +34,8 @@ public class Registration {
     @Column(columnDefinition = "TEXT")
     private String qrCode;
 
+    @Column(columnDefinition = "TEXT")
+    private String qrContent;
+
     private LocalDateTime registeredAt;
 }

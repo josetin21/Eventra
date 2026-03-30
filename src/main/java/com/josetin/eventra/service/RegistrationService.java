@@ -69,6 +69,7 @@ public class RegistrationService {
                 .user(student)
                 .event(event)
                 .qrCode(qrCodeBase64)
+                .qrContent(qrContent)
                 .registeredAt(LocalDateTime.now())
                 .build();
 

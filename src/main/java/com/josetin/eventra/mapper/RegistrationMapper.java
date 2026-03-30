@@ -15,6 +15,7 @@ public class RegistrationMapper {
                 registration.getEvent().getEventDate(),
                 registration.getUser().getName(),
                 registration.getQrCode(),
+                registration.getQrContent(),
                 registration.getRegisteredAt()
         );
     }

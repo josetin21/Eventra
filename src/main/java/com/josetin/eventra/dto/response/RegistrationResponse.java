@@ -9,6 +9,7 @@ public record RegistrationResponse(
         LocalDateTime eventDate,
         String attendanceName,
         String qrCode,
+        String qrContent,
         LocalDateTime registeredAt
 ) {
 }

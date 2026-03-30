@@ -69,24 +69,21 @@ public class AttendanceService {
 
         Event event = session.getEvent();
 
-        if (!registrationRepository.existsByUserIdAndEventId(student.getId(), event.getId())){
-            throw new BusinessException("You are not registered for this event", HttpStatus.FORBIDDEN);
+        Registration registration = registrationRepository.findByQrContent(qrCode)
+                .orElseThrow(() -> new BusinessException("Invalid QR code", HttpStatus.BAD_REQUEST));
+
+        if (!registration.getEvent().getId().equals(event.getId())){
+            throw new BusinessException("QR code does not belong to this event", HttpStatus.BAD_REQUEST);
         }
 
-        if (attendanceRepository.existsByUserIdAndEventId(student.getId(), event.getId())){
-            throw new BusinessException("Attendance already marked", HttpStatus.CONFLICT);
-        }
+        User attendee = registration.getUser();
 
-        boolean validQr = registrationRepository.existsByUserIdAndEventIdAndQrCode(
-                student.getId(), event.getId(), qrCode
-        );
-
-        if (!validQr){
-            throw new BusinessException("Invalid QR code", HttpStatus.BAD_REQUEST);
+        if (attendanceRepository.existsByUserIdAndEventId(attendee.getId(), event.getId())){
+            throw new BusinessException("Attendance already marked for this event", HttpStatus.CONFLICT);
         }
 
         Attendance attendance = Attendance.builder()
-                .user(student)
+                .user(attendee)
                 .event(event)
                 .attendanceSession(session)
                 .markedAt(LocalDateTime.now())
