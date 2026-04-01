@@ -127,8 +127,8 @@ public class EventService {
             throw new BusinessException("You are not authorized to update this event", HttpStatus.FORBIDDEN);
         }
 
-        if (event.getStatus() == EventStatus.APPROVED){
-            throw new BusinessException("Cannot edit an approved event", HttpStatus.BAD_REQUEST);
+        if (event.getStatus() != EventStatus.APPROVED){
+            throw new BusinessException("Only approved events can be edited", HttpStatus.BAD_REQUEST);
         }
 
         event.setTitle(request.title());
