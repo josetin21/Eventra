@@ -32,6 +32,8 @@ public record EventRequest(
 
         String idCardUrl,
 
-        String permissionLetterUrl
+        String permissionLetterUrl,
+
+        Boolean notifyRegistrants
 ) {
 }

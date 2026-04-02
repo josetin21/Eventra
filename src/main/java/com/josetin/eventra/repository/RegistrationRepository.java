@@ -20,6 +20,8 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
 
     List<Registration> findByUserId(Long userId);
 
+    List<Registration> findByEventId(Long id);
+
     Optional<Registration> findByQrContent(String qrContent);
    
     Optional<Registration> findByQrCode(String qrCode);

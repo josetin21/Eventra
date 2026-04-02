@@ -4,10 +4,12 @@ import com.josetin.eventra.dto.request.EventRequest;
 import com.josetin.eventra.dto.response.EventResponse;
 import com.josetin.eventra.entity.Event;
 import com.josetin.eventra.entity.EventStatus;
+import com.josetin.eventra.entity.Registration;
 import com.josetin.eventra.entity.User;
 import com.josetin.eventra.exception.BusinessException;
 import com.josetin.eventra.mapper.EventMapper;
 import com.josetin.eventra.repository.EventRepository;
+import com.josetin.eventra.repository.RegistrationRepository;
 import com.josetin.eventra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -26,6 +29,8 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final EventMapper eventMapper;
+    private final RegistrationRepository registrationRepository;
+    private final EmailService emailService;
 
     private boolean isBlank(String s){
         return s == null || s.trim().isEmpty();
@@ -131,6 +136,11 @@ public class EventService {
             throw new BusinessException("Only approved events can be edited", HttpStatus.BAD_REQUEST);
         }
 
+        boolean notify = request.notifyRegistrants() == null || request.notifyRegistrants();
+
+        LocalDateTime oldEventDate = event.getEventDate();
+        String oldVenue = event.getVenue();
+
         event.setTitle(request.title());
         event.setDescription(request.description());
         event.setEventDate(request.eventDate());
@@ -139,6 +149,34 @@ public class EventService {
         event.setRegistrationDeadline(request.registrationDeadline());
 
         Event saved = eventRepository.save(event);
+
+        boolean importantChange = (
+                oldEventDate != null && !oldEventDate.equals(saved.getEventDate()))
+                        || (oldVenue != null && !oldVenue.equals(saved.getVenue()));
+
+        if (notify && importantChange){
+            List<Registration> registrations = registrationRepository.findByEventId(saved.getId());
+
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+            String oldDateFormatted = oldEventDate != null ? oldEventDate.format(fmt) : "-";
+            String newDateFormatted = saved.getEventDate() != null ? saved.getEventDate().format(fmt) : "-";
+
+            for (Registration r : registrations){
+                String toEmail = r.getUser().getEmail();
+                String studentName = r.getUser().getName();
+
+                emailService.sendEventUpdateNotification(
+                        toEmail,
+                        studentName,
+                        saved.getTitle(),
+                        oldVenue,
+                        saved.getVenue(),
+                        oldDateFormatted,
+                        newDateFormatted
+                );
+            }
+        }
+
         return eventMapper.toResponse(saved);
     }
 
