@@ -4,6 +4,8 @@ import com.josetin.eventra.entity.Event;
 import com.josetin.eventra.entity.Registration;
 import com.josetin.eventra.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +27,11 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
     Optional<Registration> findByQrContent(String qrContent);
    
     Optional<Registration> findByQrCode(String qrCode);
+
+    @Query("""
+            select r from Registration r
+            join fetch r.user
+            where r.event.id = :eventId
+            """)
+    List<Registration> findByEventIdWithUser(@Param("eventId") Long eventId);
 }
