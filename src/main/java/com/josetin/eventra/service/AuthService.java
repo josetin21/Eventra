@@ -93,7 +93,8 @@ public class AuthService {
                 token,
                 user.getRole().name(),
                 user.getName(),
-                user.getDesignation() != null ? user.getDesignation().name() : null
+                user.getDesignation() != null ? user.getDesignation().name() : null,
+                user.getEmail()
         );
     }
 }
