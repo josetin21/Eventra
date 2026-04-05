@@ -1,5 +1,6 @@
 package com.josetin.eventra.controller;
 
+import com.josetin.eventra.dto.request.ChangePasswordRequest;
 import com.josetin.eventra.dto.request.UpdateProfileRequest;
 import com.josetin.eventra.dto.response.UserProfileResponse;
 import com.josetin.eventra.service.UserService;
@@ -7,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -23,6 +26,12 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<UserProfileResponse> updateMyProfile(@Valid @RequestBody UpdateProfileRequest request){
         return ResponseEntity.ok(userService.updateMyProfile(request));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<?> changeMyPassword(@Valid @RequestBody ChangePasswordRequest request){
+        userService.changeMyPassword(request);
+        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
 
 }

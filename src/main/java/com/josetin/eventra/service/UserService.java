@@ -1,5 +1,6 @@
 package com.josetin.eventra.service;
 
+import com.josetin.eventra.dto.request.ChangePasswordRequest;
 import com.josetin.eventra.dto.request.UpdateProfileRequest;
 import com.josetin.eventra.dto.response.UserProfileResponse;
 import com.josetin.eventra.entity.User;
@@ -9,6 +10,7 @@ import com.josetin.eventra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private User getCurrentUser(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -41,6 +44,20 @@ public class UserService {
         return userMapper.toResponse(saved);
     }
 
+    public void changeMyPassword(ChangePasswordRequest request){
+        User user = getCurrentUser();
+
+        if (!request.newPassword().equals(request.confirmNewPassword())){
+            throw new BusinessException("New password and confirm password do not match", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())){
+            throw new BusinessException("Current password is incorrect", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
 
 
 }

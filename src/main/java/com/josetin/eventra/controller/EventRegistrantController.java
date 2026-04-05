@@ -4,7 +4,6 @@ import com.josetin.eventra.dto.response.RegistrantResponse;
 import com.josetin.eventra.service.EventRegistrantService;
 import com.josetin.eventra.service.RegistrantExportService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.LifecycleState;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
