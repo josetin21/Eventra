@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public record EventResponse(
 
         Long id,
+        Long organizerId,
         String title,
         String description,
         LocalDateTime eventDate,
@@ -20,5 +21,6 @@ public record EventResponse(
         String permissionLetterUrl,
         String rejectionReason,
         String organizerName
+
 ) {
 }

@@ -9,10 +9,12 @@ public class EventMapper {
 
     public EventResponse toResponse(Event event){
         int registeredCount = event.getRegistrations() == null ? 0 : event.getRegistrations() .size();
+        Long organizerId = event.getOrganizer() != null ? event.getOrganizer().getId() : null;
         String organizerName = event.getOrganizer() != null ? event.getOrganizer().getName() : "Unknown";
 
         return new EventResponse(
                 event.getId(),
+                organizerId,
                 event.getTitle(),
                 event.getDescription(),
                 event.getEventDate(),

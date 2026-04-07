@@ -94,7 +94,8 @@ public class AuthService {
                 user.getRole().name(),
                 user.getName(),
                 user.getDesignation() != null ? user.getDesignation().name() : null,
-                user.getEmail()
+                user.getEmail(),
+                user.getId()
         );
     }
 }
