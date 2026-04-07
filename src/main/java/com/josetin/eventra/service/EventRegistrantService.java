@@ -3,6 +3,7 @@ package com.josetin.eventra.service;
 import com.josetin.eventra.dto.response.RegistrantResponse;
 import com.josetin.eventra.entity.Event;
 import com.josetin.eventra.entity.Registration;
+import com.josetin.eventra.entity.Role;
 import com.josetin.eventra.entity.User;
 import com.josetin.eventra.exception.BusinessException;
 import com.josetin.eventra.repository.EventRepository;
@@ -36,6 +37,10 @@ public class EventRegistrantService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(()-> new BusinessException("Event not found", HttpStatus.NOT_FOUND));
 
+        if (getCurrentUser().getRole() == Role.ADMIN){
+            return event;
+        }
+
         if (event.getOrganizer() == null || !event.getOrganizer().getId().equals(organizerId)){
             throw new BusinessException("You are not authorized to access registrants for this event",HttpStatus.FORBIDDEN);
         }
@@ -54,6 +59,7 @@ public class EventRegistrantService {
                     return new RegistrantResponse(
                             user.getName(),
                             user.getEmail(),
+                            user.getInstitutionName(),
                             user.getDepartment(),
                             user.getYear(),
                             user.getDesignation() == null ? null : user.getDesignation().name()

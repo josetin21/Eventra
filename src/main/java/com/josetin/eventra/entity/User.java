@@ -31,6 +31,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String institutionName;
+
     private String department;
 
     private Integer year;

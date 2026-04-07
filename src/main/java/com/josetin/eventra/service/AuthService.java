@@ -41,6 +41,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
                 .designation(request.designation())
+                .institutionName(request.institutionName())
                 .department(request.department())
                 .year(request.year())
                 .createdAt(LocalDateTime.now())

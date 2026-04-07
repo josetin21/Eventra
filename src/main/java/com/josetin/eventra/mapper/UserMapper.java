@@ -11,6 +11,7 @@ public class UserMapper {
         return new UserProfileResponse(
                 user.getName(),
                 user.getEmail(),
+                user.getInstitutionName(),
                 user.getDepartment(),
                 user.getYear()
         );

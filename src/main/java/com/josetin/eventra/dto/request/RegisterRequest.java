@@ -15,6 +15,9 @@ public record RegisterRequest(
         @NotBlank(message = "Password is required")
         String password,
 
+        @NotBlank(message = "Institution name is required")
+        String institutionName,
+
         @NotBlank(message = "Department is required")
         String department,
 

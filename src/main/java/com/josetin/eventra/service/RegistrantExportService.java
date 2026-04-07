@@ -32,6 +32,7 @@ public class RegistrantExportService {
         for (RegistrantResponse registrant : registrants){
             stringBuilder.append(csv(registrant.name())).append(',')
                     .append(csv(registrant.email())).append(',')
+                    .append(csv(registrant.institutionName())).append(',')
                     .append(csv(registrant.department())).append(',')
                     .append(registrant.year() == null ? "" : registrant.year()).append(',')
                     .append(csv(registrant.designation()))
@@ -50,21 +51,23 @@ public class RegistrantExportService {
             Row header = sheet.createRow(0);
             header.createCell(0).setCellValue("Name");
             header.createCell(1).setCellValue("Email");
-            header.createCell(2).setCellValue("Department");
-            header.createCell(3).setCellValue("Year");
-            header.createCell(4).setCellValue("Designation");
+            header.createCell(2).setCellValue("Institution");
+            header.createCell(3).setCellValue("Department");
+            header.createCell(4).setCellValue("Year");
+            header.createCell(5).setCellValue("Designation");
 
             int rowIdx = 1;
             for (RegistrantResponse registrant : registrants){
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(registrant.name() == null ? "" : registrant.name());
                 row.createCell(1).setCellValue(registrant.email() == null ? "" : registrant.email());
-                row.createCell(2).setCellValue(registrant.department() == null ? "" : registrant.department());
-                row.createCell(3).setCellValue(registrant.year() == null ? "" : String.valueOf(registrant.year()));
-                row.createCell(4).setCellValue(registrant.designation() == null ? "" : registrant.designation());
+                row.createCell(2).setCellValue(registrant.institutionName() == null ? "" : registrant.institutionName());
+                row.createCell(3).setCellValue(registrant.department() == null ? "" : registrant.department());
+                row.createCell(4).setCellValue(registrant.year() == null ? "" : String.valueOf(registrant.year()));
+                row.createCell(5).setCellValue(registrant.designation() == null ? "" : registrant.designation());
             }
 
-            for (int i = 0; i < 5 ; i++) sheet.autoSizeColumn(i);
+            for (int i = 0; i < 6 ; i++) sheet.autoSizeColumn(i);
 
             workbook.write(outputStream);
             return outputStream.toByteArray();
