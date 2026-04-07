@@ -1,10 +1,9 @@
 package com.josetin.eventra.controller;
 
-import com.josetin.eventra.dto.request.AdminRegisterRequest;
-import com.josetin.eventra.dto.request.LoginRequest;
-import com.josetin.eventra.dto.request.RegisterRequest;
+import com.josetin.eventra.dto.request.*;
 import com.josetin.eventra.dto.response.AuthResponse;
 import com.josetin.eventra.service.AuthService;
+import com.josetin.eventra.service.PasswordResetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.crypto.Mac;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request){
@@ -36,6 +39,22 @@ public class AuthController {
     public ResponseEntity<String> registerAdmin(@Valid @RequestBody AdminRegisterRequest request){
         authService.registerAdmin(request);
         return ResponseEntity.ok("Admin registered successfully");
+    }
+
+    @PostMapping("/forgot-password/otp")
+    public ResponseEntity<?> requestPasswordResetOtp(@Valid @RequestBody ForgotPasswordOtpRequest request){
+        try{
+            passwordResetService.requestOtp(request.email());
+        } catch (Exception ignored){
+
+        }
+        return ResponseEntity.ok(Map.of("message", "An OTP has been sent."));
+    }
+
+    @PostMapping("/forgot-password/reset")
+    public ResponseEntity<?> resetPasswordWithOtp(@Valid @RequestBody ResetPasswordWithOtpRequest request){
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.ok(Map.of("message","password reset successful. Please login."));
     }
 
 }

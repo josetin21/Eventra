@@ -34,7 +34,14 @@ public class SecurityConfig {
                 .csrf(csrf-> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/auth/**", "/error").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/auth/login",
+                                "/auth/register",
+                                "/auth/register/admin",
+                                "auth/forgot-password/otp",
+                                "auth/forgot-password/reset"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/events", "/events/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

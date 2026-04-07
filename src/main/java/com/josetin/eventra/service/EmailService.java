@@ -54,4 +54,20 @@ public class EmailService {
         );
         mailSender.send(message);
     }
+
+    public void sendPasswordResetOtp(String toEmail, String otp){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Eventra Password Reset OTP");
+        message.setText(
+                "Hi,\n\n" +
+                        "Your OTP to reset your Eventra password is:\n\n" +
+                        otp + "\n\n" +
+                        "This OTP will expire in 3 minutes.\n\n" +
+                        "If you didn't request this, ignore this email.\n\n" +
+                        "regards,\n" +
+                        "Eventra Team"
+        );
+        mailSender.send(message);
+    }
 }
