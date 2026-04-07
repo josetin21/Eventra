@@ -96,5 +96,7 @@ public class PasswordResetService {
 
         otp.setUsed(true);
         passwordResetOtpRepository.save(otp);
+
+        emailService.sendPasswordResetSuccess(user.getEmail());
     }
 }

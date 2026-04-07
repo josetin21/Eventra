@@ -70,4 +70,18 @@ public class EmailService {
         );
         mailSender.send(message);
     }
+
+    public void sendPasswordResetSuccess(String toEmail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Eventra Password Changed Successfully");
+        message.setText(
+                "Hi,\n\n" +
+                        "Your Eventra account password was changed successfully.\n\n" +
+                        "If you did not perform this action, please reset your password immediately and contact support.\n\n" +
+                        "Regards,\n" +
+                        "Eventra Team"
+        );
+        mailSender.send(message);
+    }
 }
