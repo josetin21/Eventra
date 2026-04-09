@@ -39,8 +39,8 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/auth/register",
                                 "/auth/register/admin",
-                                "auth/forgot-password/otp",
-                                "auth/forgot-password/reset"
+                                "/auth/forgot-password/otp",
+                                "/auth/forgot-password/reset"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/events", "/events/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
