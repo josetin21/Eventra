@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.LocalDateTime;
 
 @Service
@@ -51,7 +53,9 @@ public class AuthService {
     }
 
     public void registerAdmin(AdminRegisterRequest request){
-        if (!request.adminKey().equals(adminKey)){
+        if (!MessageDigest.isEqual(
+                request.adminKey().getBytes(StandardCharsets.UTF_8),
+                adminKey.getBytes(StandardCharsets.UTF_8))){
             throw new BusinessException("Invalid admin Key", HttpStatus.FORBIDDEN);
         }
 
