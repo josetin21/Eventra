@@ -10,5 +10,8 @@ RUN mvn -DskipTests package
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
+# Install CA certificates for SSL/TLS support (critical for Gmail SMTP)
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/target/*.jar app.jar
 CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT:-8080}"]
