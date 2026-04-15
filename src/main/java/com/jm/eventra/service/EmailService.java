@@ -1,15 +1,20 @@
 package com.jm.eventra.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    private static final String FROM_EMAIL = "evnetra.io@gmail.com";
 
     private final JavaMailSender mailSender;
 
@@ -18,9 +23,10 @@ public class EmailService {
                                              String eventDate){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
+        message.setFrom(FROM_EMAIL);
         message.setSubject("Registration Confirmed - " + eventTitle);
         message.setText(
-                        "Hi " + studentName + ",\n\n" +
+                "Hi " + studentName + ",\n\n" +
                         "Your registration for " + eventTitle + " has been confirmed!\n\n" +
                         "Event Details:\n" +
                         "Title: " + eventTitle + "\n" +
@@ -30,7 +36,7 @@ public class EmailService {
                         "regards,\n" +
                         "Eventra Team"
         );
-        mailSender.send(message);
+        safeSend(message, "registration confirmation", toEmail);
     }
 
     public void sendEventUpdateNotification(String toEmail, String studentName,
@@ -40,6 +46,7 @@ public class EmailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
+        message.setFrom(FROM_EMAIL);
         message.setSubject("Event Updated - " + eventTitle);
         message.setText(
                 "Hi " + studentName + ",\n\n" +
@@ -52,12 +59,13 @@ public class EmailService {
                         "regards,\n" +
                         "Eventra Team"
         );
-        mailSender.send(message);
+        safeSend(message, "event update notification", toEmail);
     }
 
     public void sendPasswordResetOtp(String toEmail, String otp){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
+        message.setFrom(FROM_EMAIL);
         message.setSubject("Eventra Password Reset OTP");
         message.setText(
                 "Hi,\n\n" +
@@ -68,12 +76,13 @@ public class EmailService {
                         "regards,\n" +
                         "Eventra Team"
         );
-        mailSender.send(message);
+        safeSend(message, "password reset OTP", toEmail);
     }
 
     public void sendPasswordResetSuccess(String toEmail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
+        message.setFrom(FROM_EMAIL);
         message.setSubject("Eventra Password Changed Successfully");
         message.setText(
                 "Hi,\n\n" +
@@ -82,6 +91,16 @@ public class EmailService {
                         "Regards,\n" +
                         "Eventra Team"
         );
-        mailSender.send(message);
+        safeSend(message, "password reset success", toEmail);
+    }
+
+    private void safeSend(SimpleMailMessage message, String context, String to) {
+        try {
+            logger.info("Sending {} email to {}", context, to);
+            mailSender.send(message);
+            logger.info("{} email sent successfully to {}", context, to);
+        } catch (Exception e) {
+            logger.error("Failed to send {} email to {}: {}", context, to, e.getMessage(), e);
+        }
     }
 }
