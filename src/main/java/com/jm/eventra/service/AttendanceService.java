@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,8 +52,8 @@ public class AttendanceService {
                 .event(event)
                 .createdBy(organizer)
                 .token(UUID.randomUUID().toString())
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(durationMinutes))
+                .createdAt(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS))
+                .expiresAt(LocalDateTime.now().plusMinutes(durationMinutes).truncatedTo(ChronoUnit.MILLIS))
                 .build();
 
         AttendanceSession saved = attendanceSessionRepository.save(session);
