@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 "/auth/forgot-password/otp",
                                 "/auth/forgot-password/reset"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/events", "/events/**", "/ping").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/events", "/events/**", "/ping", "/api/test/email").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
