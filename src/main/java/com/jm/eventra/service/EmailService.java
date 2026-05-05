@@ -96,7 +96,8 @@ public class EmailService {
         safeSend(message, "password reset success", toEmail);
     }
 
-    private void safeSend(SimpleMailMessage message, String context, String to) {
+    @Async
+    public void safeSend(SimpleMailMessage message, String context, String to) {
         try {
             logger.info("Sending {} email to {}", context, to);
             mailSender.send(message);
