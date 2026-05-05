@@ -202,6 +202,8 @@ Sensitive endpoints (login, registration, OTP request) are protected by `Sensiti
 
 ## Running Tests
 
+Unit and integration tests are not yet implemented. The project currently contains only the default Spring Boot context load test.
+
 ```bash
 ./mvnw test
 ```
