@@ -5,9 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +17,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    @Async
     public void sendRegistrationConfirmation(String toEmail, String studentName,
                                              String eventTitle, String eventVenue,
                                              String eventDate){
@@ -39,11 +39,11 @@ public class EmailService {
         safeSend(message, "registration confirmation", toEmail);
     }
 
+    @Async
     public void sendEventUpdateNotification(String toEmail, String studentName,
                                             String eventTitle,
                                             String oldVenue, String newVenue,
                                             String oldEventDate, String newEventDate){
-
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setFrom(FROM_EMAIL);
@@ -62,6 +62,7 @@ public class EmailService {
         safeSend(message, "event update notification", toEmail);
     }
 
+    @Async
     public void sendPasswordResetOtp(String toEmail, String otp){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
@@ -79,6 +80,7 @@ public class EmailService {
         safeSend(message, "password reset OTP", toEmail);
     }
 
+    @Async
     public void sendPasswordResetSuccess(String toEmail) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
